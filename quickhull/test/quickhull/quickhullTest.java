@@ -172,5 +172,46 @@ public class quickhullTest {
         List<Point> expectedVal = Arrays.asList(a, d, i, f);
         assertEquals(expectedVal, retVal);
     }
+    
+    @Test
+    public void testGetConvexHullNotEnoughPoints() {
+        Point a = new Point(3, 3);
+        Point b = new Point(2, 2);
+        Quickhull hull = new Quickhull(Arrays.asList(a, b));
+        
+        try {
+            hull.getConvexHull();
+            fail("Expected an IllegalArgumentException to be thrown");
+        } catch (IllegalArgumentException IllegalArgumentException) {
+            assertEquals("Convex hull calculation requires at least 3 unique points", IllegalArgumentException.getMessage());
+        }
+    }
+    @Test
+    public void testGetConvexHullAllCollinear() {
+        /**
+         * 9
+         * 8 
+         * 7
+         * 6
+         * 5         d
+         * 4       c
+         * 3     b
+         * 2   a
+         * 1
+         * 0 1 2 3 4 5 6 7 8 9
+         * 
+         */
+        Point a = new Point(2, 2);
+        Point b = new Point(3, 3);
+        Point c = new Point(4, 4);
+        Point d = new Point(5, 5);
+        Quickhull hull = new Quickhull(Arrays.asList(a, b, c, d));
+        try {
+            hull.getConvexHull();
+            fail("Expected an IllegalArgumentException to be thrown");
+        } catch (IllegalArgumentException IllegalArgumentException) {
+            assertEquals("Convex hull calculation requires at least one point not to be collinear", IllegalArgumentException.getMessage());
+        }
+    }
 
 }
