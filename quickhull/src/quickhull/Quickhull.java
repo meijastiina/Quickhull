@@ -83,8 +83,29 @@ public class Quickhull {
         this.leftpoint = getPointOnLeft();
         this.rightpoint = getPointOnRight();    
     }
+    protected boolean areAllCollinear() {
+        if(this.points.size() < 2) {
+            return true;
+        }
+        final Point p1 = this.points.get(0);
+        final Point p2 = this.points.get(1);
+        for(int i = 2; i < this.points.size(); i++) {
+            Point p3 = points.get(i);
+            long crossProduct = (((long)p2.x - p1.x) * ((long)p3.y - p1.y)) - (((long)p2.y - p1.y) * ((long)p3.x - p1.x));
+            if(crossProduct != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
     protected List<Point> getConvexHull() {
         List<Point> convexHull = new ArrayList<>();
+        if(this.points.size() < 3) {
+            throw new IllegalArgumentException("Convex hull calculation requires at least 3 unique points");
+        }
+        if(this.areAllCollinear()) {
+            throw new IllegalArgumentException("Convex hull calculation requires at least one point not to be collinear");
+        }
         this.divideInTwo();
         //extreme values are always part of the convex hull
         convexHull.add(this.leftpoint);
